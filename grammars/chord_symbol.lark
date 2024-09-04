@@ -4,31 +4,40 @@
 // The interpreter needs to make some inferences beyond the grammar's syntax 
 // (e.g. Cmaj implies a p5, C13 implies a 9 and 11, etc.), but that is not the
 // parser's responsibility.
-start: normal_chord altered_extension* add* no*
+start: chordform
+     | slash_chord
 
+chordform: normal_chord altered_extension* add* no*
+slash_chord: chordform "/" bass 
+bass: _note_name
+error: _roman_name (_maj | _min | _dim | _aug | _halfdim | main_extension | altered_extension | add | no)* "/"
 normal_chord: major 
             | minor 
             | suspended
             | diminished 
             | augmented 
             | half_diminished
+            | dominant
 
-major: root_symbol
-     | root_symbol _maj main_extension?
-minor: root_symbol _min main_extension?
-suspended: root_symbol main_extension? sus
-         | root_symbol _maj main_extension sus
-diminished: root_symbol _dim main_extension?
-          | root_symbol _min "b5"
-augmented: root_symbol _aug main_extension?
-         | root_symbol main_extension _aug
-         | root_symbol _maj "#5"
+major: root_symbol SIX?
+     | root_symbol _maj SIX?
+     | root_symbol maj_extension
+minor: root_symbol _min (main_extension | maj_extension | SIX)?
+suspended: root_symbol (main_extension | maj_extension | SIX)? sus
+diminished: root_symbol _dim (main_extension | maj_extension)?
+          | root_symbol _min (main_extension | maj_extension)? "b5" 
+augmented: root_symbol _aug (main_extension | maj_extension)?
+         | root_symbol (main_extension | maj_extension | SIX) (_aug | "#5")
 half_diminished: root_symbol _min main_extension "b5"
                | root_symbol _halfdim main_extension?
-root_symbol: _letter_name _accidental*
-           | _accidental* roman_numeral
+dominant: root_symbol main_extension
 
-main_extension: (SIX | SEVEN | NINE | ELEVEN | THIRTEEN)
+root_symbol: _note_name | _roman_name
+_note_name: _letter_name _accidental*
+_roman_name: _accidental* roman_numeral
+
+main_extension: (SEVEN | NINE | ELEVEN | THIRTEEN)
+maj_extension: _maj (SEVEN | NINE | ELEVEN | THIRTEEN)
 sus: "sus" (TWO | FOUR | "bb" THREE | "#" THREE) 
 altered_extension: _accidental+ NUMBER
 add: "add" _accidental* NUMBER
