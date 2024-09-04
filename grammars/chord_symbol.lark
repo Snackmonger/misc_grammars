@@ -1,0 +1,84 @@
+%import common.C_COMMENT
+// This is a simple grammar to parse basic chord forms. 
+//
+// The interpreter needs to make some inferences beyond the grammar's syntax 
+// (e.g. Cmaj implies a p5, C13 implies a 9 and 11, etc.), but that is not the
+// parser's responsibility.
+start:  root_symbol (primary? secondary? | secondary? sus) extension* add* no*
+
+root_symbol: _letter_name accidental*
+           | accidental* roman_numeral
+primary: maj
+       | min
+       | dim
+       | aug
+secondary: maj? (SIX | SEVEN | NINE | ELEVEN | THIRTEEN)
+sus: "sus" (TWO | FOUR)
+extension: accidental* NUMBER
+add: "add" accidental* NUMBER
+no: "no" accidental* NUMBER
+accidental: SHARP
+          | FLAT
+SHARP: "#"
+FLAT: "b"
+NUMBER: TWO
+      | THIREE
+      | FOUR
+      | FIVE
+      | SIX
+      | SEVEN
+      | NINE
+      | ELEVEN
+      | THIRTEEN
+TWO: "2"
+THIREE: "3"
+FOUR: "4"
+FIVE: "5"
+SIX: "6"
+SEVEN: "7"
+NINE: "9"
+ELEVEN: "11"
+THIRTEEN: "13"
+_letter_name: A
+           | B
+           | C
+           | D
+           | E 
+           | F
+           | G
+A: "A"
+B: "B"
+C: "C"
+D: "D"
+E: "E"
+F: "F"
+G: "G"
+roman_numeral: I | II | III | IV | V | VI | VII
+I: "I" | "i"
+II: "II" | "ii"
+III: "III" | "iii"
+IV: "IV" | "iv"
+V: "V" | "v"
+VI: "VI" | "vi"
+VII: "VII" | "vii"
+
+maj: MAJ
+   | M_UPPER
+   | DELTA
+min: MIN
+   | M_LOWER
+   | MINUS
+dim: DIM
+halfdim: OE
+aug: AUG
+   | PLUS
+M_UPPER: "M"
+MAJ: "maj"
+DELTA: "delta"
+MIN: "min"
+M_LOWER: "m"
+MINUS: "-"
+DIM: "dim"
+OE: "oe"
+AUG: "aug"
+PLUS: "+"
