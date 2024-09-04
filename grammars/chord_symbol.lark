@@ -11,9 +11,10 @@ root_symbol: _letter_name accidental*
 primary: maj
        | min
        | dim
+       | halfdim
        | aug
 secondary: maj? (SIX | SEVEN | NINE | ELEVEN | THIRTEEN)
-sus: "sus" (TWO | FOUR)
+sus: "sus" (TWO | FOUR | "bb" THREE | "#" THREE) 
 extension: accidental* NUMBER
 add: "add" accidental* NUMBER
 no: "no" accidental* NUMBER
@@ -74,11 +75,12 @@ aug: AUG
    | PLUS
 M_UPPER: "M"
 MAJ: "maj"
-DELTA: "delta"
+DELTA: "Δ"
 MIN: "min"
 M_LOWER: "m"
 MINUS: "-"
 DIM: "dim"
-OE: "oe"
+   | "o"
+OE: "ø"
 AUG: "aug"
 PLUS: "+"
