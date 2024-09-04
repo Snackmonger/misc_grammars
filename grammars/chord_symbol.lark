@@ -4,52 +4,54 @@
 // The interpreter needs to make some inferences beyond the grammar's syntax 
 // (e.g. Cmaj implies a p5, C13 implies a 9 and 11, etc.), but that is not the
 // parser's responsibility.
-start: chordform
-     | slash_chord
 
-chordform: normal_chord altered_extension* add* no*
-slash_chord: chordform "/" bass 
+start: (alpha_root | _roman_name) chordform
+     | alpha_root chordform "/" bass 
+
+alpha_root: _note_name
+roman_root: _roman_name
+
+
+chordform: _type altered_extension* add* no*
+slash_chord: 
 bass: _note_name
-error: _roman_name (_maj | _min | _dim | _aug | _halfdim | main_extension | altered_extension | add | no)* "/"
-normal_chord: major 
-            | minor 
-            | suspended
-            | diminished 
-            | augmented 
-            | half_diminished
-            | dominant
+_type: major 
+     | minor 
+     | suspended
+     | half_diminished
+     | diminished 
+     | augmented 
+     | dominant
 
-major: root_symbol SIX?
-     | root_symbol _maj SIX?
-     | root_symbol maj_extension
-minor: root_symbol _min (main_extension | maj_extension | SIX)?
-suspended: root_symbol (main_extension | maj_extension | SIX)? sus
-diminished: root_symbol _dim (main_extension | maj_extension)?
-          | root_symbol _min (main_extension | maj_extension)? "b5" 
-augmented: root_symbol _aug (main_extension | maj_extension)?
-         | root_symbol (main_extension | maj_extension | SIX) (_aug | "#5")
-half_diminished: root_symbol _min main_extension "b5"
-               | root_symbol _halfdim main_extension?
-dominant: root_symbol main_extension
+major: SIX?
+     | _maj SIX?
+     | maj_extension
+minor: _min (main_extension | maj_extension | SIX)?
+suspended: (main_extension | maj_extension | SIX)? sus
+diminished: _dim (main_extension | maj_extension)?
+          | _min "b5" 
+augmented: _aug (main_extension | maj_extension)?
+         | (main_extension | maj_extension | SIX) (_aug | "#5")
+half_diminished: _min main_extension "b5"
+               | _halfdim main_extension?
+dominant: main_extension
 
-root_symbol: _note_name | _roman_name
+
 _note_name: _letter_name _accidental*
-_roman_name: _accidental* roman_numeral
+_roman_name: _accidental* _roman_numeral
 
 main_extension: (SEVEN | NINE | ELEVEN | THIRTEEN)
 maj_extension: _maj (SEVEN | NINE | ELEVEN | THIRTEEN)
 sus: "sus" (TWO | FOUR | "bb" THREE | "#" THREE) 
 altered_extension: _accidental+ NUMBER
-add: "add" _accidental* NUMBER
-no: "no" _accidental* NUMBER
+add: "add" _accidental* (NUMBER | FIVE | THREE)
+no: "no" _accidental* (NUMBER | FIVE | THREE)
 _accidental: SHARP
           | FLAT
 SHARP: "#"
 FLAT: "b"
 NUMBER: TWO
-      | THREE
       | FOUR
-      | FIVE
       | SIX
       | SEVEN
       | NINE
@@ -78,7 +80,7 @@ D: "D"
 E: "E"
 F: "F"
 G: "G"
-roman_numeral: I | II | III | IV | V | VI | VII
+_roman_numeral: I | II | III | IV | V | VI | VII
 I: "I" | "i"
 II: "II" | "ii"
 III: "III" | "iii"
