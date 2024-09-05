@@ -5,14 +5,14 @@
 // (e.g. Cmaj implies a p5, C13 implies a 9 and 11, etc.), but that is not the
 // parser's responsibility.
 
-start: (alpha_root | _roman_name) chordform
-     | alpha_root chordform "/" bass 
+start: (alpha_root | roman_root) _chordform
+     | alpha_root _chordform "/" bass 
 
 alpha_root: _note_name
 roman_root: _roman_name
 
 
-chordform: _type altered_extension* add* no*
+_chordform: _type altered_extension* alt5? add* no*
 slash_chord: 
 bass: _note_name
 _type: major 
@@ -22,26 +22,33 @@ _type: major
      | diminished 
      | augmented 
      | dominant
+     | altered
 
-major: SIX?
-     | _maj SIX?
-     | maj_extension
-minor: _min (main_extension | maj_extension | SIX)?
-suspended: (main_extension | maj_extension | SIX)? sus
-diminished: _dim (main_extension | maj_extension)?
+major: SIX? alt5?
+     | _maj SIX? alt5?
+     | maj7_extension alt5?
+minor: _min (b7_extension | maj7_extension | SIX)?
+suspended: (b7_extension | maj7_extension | SIX)? sus
+diminished: _dim (bb7_extension | maj7_extension)?
           | _min "b5" 
-augmented: _aug (main_extension | maj_extension)?
-         | (main_extension | maj_extension | SIX) (_aug | "#5")
-half_diminished: _min main_extension "b5"
-               | _halfdim main_extension?
-dominant: main_extension
+augmented: _aug (b7_extension | maj7_extension)?
+         | (b7_extension | maj7_extension | SIX) (_aug | "#5")
+half_diminished: _min b7_extension "b5"
+               | _halfdim b7_extension?
+dominant: b7_extension alt5?
+altered: "alt" b7_extension?
+   | b7_extension "alt"
 
 
 _note_name: _letter_name _accidental*
 _roman_name: _accidental* _roman_numeral
 
-main_extension: (SEVEN | NINE | ELEVEN | THIRTEEN)
-maj_extension: _maj (SEVEN | NINE | ELEVEN | THIRTEEN)
+alt5: SH5 | FL5
+SH5: "#5" 
+FL5: "b5"
+b7_extension: (SEVEN | NINE | ELEVEN | THIRTEEN)
+bb7_extension: (SEVEN | NINE | ELEVEN | THIRTEEN)
+maj7_extension: _maj (SEVEN | NINE | ELEVEN | THIRTEEN)
 sus: "sus" (TWO | FOUR | "bb" THREE | "#" THREE) 
 altered_extension: _accidental+ NUMBER
 add: "add" _accidental* (NUMBER | FIVE | THREE)

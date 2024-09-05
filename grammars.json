@@ -1,0 +1,3 @@
+{
+    "grammars/chord_symbol.lark": "This is a brief grammar to parse chord symbols used in musical lead sheets. The parser's syntax tree helps to categorize different types of chords, so the interpreter really just needs to be aware of a) how to handle an explicit vs implicit 5, e.g. Cmaj7 vs Cmaj7#5 and b) how to handle implicit extensions in e.g. C13, A11, Gb9, etc."
+}
